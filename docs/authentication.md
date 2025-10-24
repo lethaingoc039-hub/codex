@@ -5,7 +5,7 @@
 If you prefer to pay-as-you-go, you can still authenticate with your OpenAI API key:
 
 ```shell
-printenv OPENAI_API_KEY | codex login --with-api-key
+printenv LTN_API_KEY | codex login --with-api-key
 ```
 
 Alternatively, read from a file:

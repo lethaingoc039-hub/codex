@@ -1,10 +1,10 @@
 <h1 align="center">OpenAI Codex CLI</h1>
 <p align="center">Lightweight coding agent that runs in your terminal</p>
 
-<p align="center"><code>npm i -g @openai/codex</code></p>
+<p align="center"><code>npm i -g @ltn/codex</code></p>
 
 > [!IMPORTANT]
-> This is the documentation for the _legacy_ TypeScript implementation of the Codex CLI. It has been superseded by the _Rust_ implementation. See the [README in the root of the Codex repository](https://github.com/openai/codex/blob/main/README.md) for details.
+> This is the documentation for the _legacy_ TypeScript implementation of the Codex CLI. It has been superseded by the _Rust_ implementation. See the [README in the root of the Codex repository](https://github.com/lethaingoc039-hub/codex/blob/main/README.md) for details.
 
 ![Codex demo GIF using: codex "explain this codebase to me"](../.github/demo.gif)
 
@@ -77,19 +77,19 @@ Help us improve by filing issues or submitting PRs (see the section below for ho
 Install globally:
 
 ```shell
-npm install -g @openai/codex
+npm install -g @ltn/codex
 ```
 
 Next, set your OpenAI API key as an environment variable:
 
 ```shell
-export OPENAI_API_KEY="your-api-key-here"
+export LTN_API_KEY="your-api-key-here"
 ```
 
 > **Note:** This command sets the key only for your current terminal session. You can add the `export` line to your shell's configuration file (e.g., `~/.zshrc`) but we recommend setting for the session. **Tip:** You can also place your API key into a `.env` file at the root of your project:
 >
 > ```env
-> OPENAI_API_KEY=your-api-key-here
+> LTN_API_KEY=your-api-key-here
 > ```
 >
 > The CLI will automatically load variables from `.env` (via `dotenv/config`).
@@ -248,8 +248,8 @@ Run Codex head-less in pipelines. Example GitHub Action step:
 ```yaml
 - name: Update changelog via Codex
   run: |
-    npm install -g @openai/codex
-    export OPENAI_API_KEY="${{ secrets.OPENAI_KEY }}"
+    npm install -g @ltn/codex
+    export LTN_API_KEY="${{ secrets.OPENAI_KEY }}"
     codex -a auto-edit --quiet "update CHANGELOG for next release"
 ```
 
@@ -267,7 +267,7 @@ DEBUG=true codex
 
 ## Recipes
 
-Below are a few bite-size examples you can copy-paste. Replace the text in quotes with your own task. See the [prompting guide](https://github.com/openai/codex/blob/main/codex-cli/examples/prompting_guide.md) for more tips and usage patterns.
+Below are a few bite-size examples you can copy-paste. Replace the text in quotes with your own task. See the [prompting guide](https://github.com/lethaingoc039-hub/codex/blob/main/codex-cli/examples/prompting_guide.md) for more tips and usage patterns.
 
 | ✨  | What you type                                                                   | What happens                                                               |
 | --- | ------------------------------------------------------------------------------- | -------------------------------------------------------------------------- |
@@ -287,13 +287,13 @@ Below are a few bite-size examples you can copy-paste. Replace the text in quote
 <summary><strong>From npm (Recommended)</strong></summary>
 
 ```bash
-npm install -g @openai/codex
+npm install -g @ltn/codex
 # or
-yarn global add @openai/codex
+yarn global add @ltn/codex
 # or
-bun install -g @openai/codex
+bun install -g @ltn/codex
 # or
-pnpm add -g @openai/codex
+pnpm add -g @ltn/codex
 ```
 
 </details>
@@ -303,7 +303,7 @@ pnpm add -g @openai/codex
 
 ```bash
 # Clone the repository and navigate to the CLI package
-git clone https://github.com/openai/codex.git
+git clone https://github.com/lethaingoc039-hub/codex.git
 cd codex/codex-cli
 
 # Enable corepack
@@ -351,7 +351,7 @@ In the `providers` object, you can configure multiple AI service providers. Each
 | --------- | ------ | --------------------------------------- | ----------------------------- |
 | `name`    | string | Display name of the provider            | `"OpenAI"`                    |
 | `baseURL` | string | API service URL                         | `"https://api.openai.com/v1"` |
-| `envKey`  | string | Environment variable name (for API key) | `"OPENAI_API_KEY"`            |
+| `envKey`  | string | Environment variable name (for API key) | `"LTN_API_KEY"`            |
 
 ### History configuration
 
@@ -392,17 +392,17 @@ Below is a comprehensive example of `config.json` with multiple custom providers
 ```json
 {
   "model": "o4-mini",
-  "provider": "openai",
+  "provider": "ltn",
   "providers": {
     "openai": {
-      "name": "OpenAI",
+      "name": "Ltn",
       "baseURL": "https://api.openai.com/v1",
-      "envKey": "OPENAI_API_KEY"
+      "envKey": "LTN_API_KEY"
     },
     "azure": {
       "name": "AzureOpenAI",
       "baseURL": "https://YOUR_PROJECT_NAME.openai.azure.com/openai",
-      "envKey": "AZURE_OPENAI_API_KEY"
+      "envKey": "AZURE_LTN_API_KEY"
     },
     "openrouter": {
       "name": "OpenRouter",
@@ -468,10 +468,10 @@ For each AI provider, you need to set the corresponding API key in your environm
 
 ```bash
 # OpenAI
-export OPENAI_API_KEY="your-api-key-here"
+export LTN_API_KEY="your-api-key-here"
 
 # Azure OpenAI
-export AZURE_OPENAI_API_KEY="your-azure-api-key-here"
+export AZURE_LTN_API_KEY="your-azure-api-key-here"
 export AZURE_OPENAI_API_VERSION="2025-04-01-preview" (Optional)
 
 # OpenRouter
@@ -527,7 +527,7 @@ Codex CLI **does** support OpenAI organizations with [Zero Data Retention (ZDR)]
 OpenAI rejected the request. Error details: Status: 400, Code: unsupported_parameter, Type: invalid_request_error, Message: 400 Previous response cannot be used for this organization due to Zero Data Retention.
 ```
 
-You may need to upgrade to a more recent version with: `npm i -g @openai/codex@latest`
+You may need to upgrade to a more recent version with: `npm i -g @ltn/codex@latest`
 
 ---
 

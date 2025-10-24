@@ -282,7 +282,7 @@ impl TurnContext {
 
 #[derive(Clone)]
 pub(crate) struct SessionConfiguration {
-    /// Provider identifier ("openai", "openrouter", ...).
+    /// Provider identifier ("ltn", "openrouter", ...).
     provider: ModelProviderInfo,
 
     /// If not specified, server will use its default model.

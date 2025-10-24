@@ -1248,7 +1248,7 @@ impl Config {
         let model_provider_id = model_provider
             .or(config_profile.model_provider)
             .or(cfg.model_provider)
-            .unwrap_or_else(|| "openai".to_string());
+            .unwrap_or_else(|| "ltn".to_string());
         let model_provider = model_providers
             .get(&model_provider_id)
             .ok_or_else(|| {
@@ -2725,7 +2725,7 @@ approval_policy = "untrusted"
 # `ConfigOverrides`.
 profile = "gpt3"
 
-[model_providers.openai-chat-completions]
+[model_providers.ltn-chat-completions]
 name = "OpenAI using Chat Completions"
 base_url = "https://api.openai.com/v1"
 env_key = "OPENAI_API_KEY"
@@ -2743,7 +2743,7 @@ model_reasoning_summary = "detailed"
 
 [profiles.gpt3]
 model = "gpt-3.5-turbo"
-model_provider = "openai-chat-completions"
+model_provider = "ltn-chat-completions"
 
 [profiles.zdr]
 model = "o3"
@@ -2789,7 +2789,7 @@ model_verbosity = "high"
         let model_provider_map = {
             let mut model_provider_map = built_in_model_providers();
             model_provider_map.insert(
-                "openai-chat-completions".to_string(),
+                "ltn-chat-completions".to_string(),
                 openai_chat_completions_provider.clone(),
             );
             model_provider_map
@@ -2844,7 +2844,7 @@ model_verbosity = "high"
                 model_context_window: Some(200_000),
                 model_max_output_tokens: Some(100_000),
                 model_auto_compact_token_limit: Some(180_000),
-                model_provider_id: "openai".to_string(),
+                model_provider_id: "ltn".to_string(),
                 model_provider: fixture.openai_provider.clone(),
                 approval_policy: AskForApproval::Never,
                 sandbox_policy: SandboxPolicy::new_read_only_policy(),
@@ -2912,7 +2912,7 @@ model_verbosity = "high"
             model_context_window: Some(16_385),
             model_max_output_tokens: Some(4_096),
             model_auto_compact_token_limit: Some(14_746),
-            model_provider_id: "openai-chat-completions".to_string(),
+            model_provider_id: "ltn-chat-completions".to_string(),
             model_provider: fixture.openai_chat_completions_provider.clone(),
             approval_policy: AskForApproval::UnlessTrusted,
             sandbox_policy: SandboxPolicy::new_read_only_policy(),
@@ -2995,7 +2995,7 @@ model_verbosity = "high"
             model_context_window: Some(200_000),
             model_max_output_tokens: Some(100_000),
             model_auto_compact_token_limit: Some(180_000),
-            model_provider_id: "openai".to_string(),
+            model_provider_id: "ltn".to_string(),
             model_provider: fixture.openai_provider.clone(),
             approval_policy: AskForApproval::OnFailure,
             sandbox_policy: SandboxPolicy::new_read_only_policy(),
@@ -3064,7 +3064,7 @@ model_verbosity = "high"
             model_context_window: Some(272_000),
             model_max_output_tokens: Some(128_000),
             model_auto_compact_token_limit: Some(244_800),
-            model_provider_id: "openai".to_string(),
+            model_provider_id: "ltn".to_string(),
             model_provider: fixture.openai_provider.clone(),
             approval_policy: AskForApproval::OnFailure,
             sandbox_policy: SandboxPolicy::new_read_only_policy(),

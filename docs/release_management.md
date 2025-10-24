@@ -2,8 +2,8 @@
 
 Currently, we made Codex binaries available in three places:
 
-- GitHub Releases https://github.com/openai/codex/releases/
-- `@openai/codex` on npm: https://www.npmjs.com/package/@openai/codex
+- GitHub Releases https://github.com/lethaingoc039-hub/codex/releases/
+- `@ltn/codex` on npm: https://www.npmjs.com/package/@ltn/codex
 - `codex` on Homebrew: https://formulae.brew.sh/cask/codex
 
 # Cutting a Release
@@ -24,7 +24,7 @@ To cut a new _public_ release from `main` (which requires more caution), run:
 
 TIP: Add the `--dry-run` flag to report the next version number for the respective release and exit.
 
-Running the publishing script will kick off a GitHub Action to build the release, so go to https://github.com/openai/codex/actions/workflows/rust-release.yml to find the corresponding workflow. (Note: we should automate finding the workflow URL with `gh`.)
+Running the publishing script will kick off a GitHub Action to build the release, so go to https://github.com/lethaingoc039-hub/codex/actions/workflows/rust-release.yml to find the corresponding workflow. (Note: we should automate finding the workflow URL with `gh`.)
 
 When the workflow finishes, the GitHub Release is "done," but you still have to consider npm and Homebrew.
 
