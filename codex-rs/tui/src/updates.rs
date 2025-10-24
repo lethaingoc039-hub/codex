@@ -143,9 +143,9 @@ fn parse_version(v: &str) -> Option<(u64, u64, u64)> {
 /// Update action the CLI should perform after the TUI exits.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum UpdateAction {
-    /// Update via `npm install -g @openai/codex@latest`.
+    /// Update via `npm install -g @ltn/codex@latest`.
     NpmGlobalLatest,
-    /// Update via `bun install -g @openai/codex@latest`.
+    /// Update via `bun install -g @ltn/codex@latest`.
     BunGlobalLatest,
     /// Update via `brew upgrade codex`.
     BrewUpgrade,
@@ -173,8 +173,8 @@ impl UpdateAction {
     /// Returns the list of command-line arguments for invoking the update.
     pub fn command_args(self) -> (&'static str, &'static [&'static str]) {
         match self {
-            UpdateAction::NpmGlobalLatest => ("npm", &["install", "-g", "@openai/codex@latest"]),
-            UpdateAction::BunGlobalLatest => ("bun", &["install", "-g", "@openai/codex@latest"]),
+            UpdateAction::NpmGlobalLatest => ("npm", &["install", "-g", "@ltn/codex@latest"]),
+            UpdateAction::BunGlobalLatest => ("bun", &["install", "-g", "@ltn/codex@latest"]),
             UpdateAction::BrewUpgrade => ("brew", &["upgrade", "--cask", "codex"]),
         }
     }

@@ -14,7 +14,7 @@ pub struct ModelFamily {
     pub slug: String,
 
     /// The model family name, e.g. "gpt-4.1". Note this should able to be used
-    /// with [`crate::openai_model_info::get_model_info`].
+    /// with [`crate::ltn_model_info::get_model_info`].
     pub family: String,
 
     /// True if the model needs additional instructions on how to use the

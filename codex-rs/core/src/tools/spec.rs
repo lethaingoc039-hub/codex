@@ -712,7 +712,7 @@ pub(crate) fn create_tools_json_for_chat_completions_api(
     Ok(tools_json)
 }
 
-pub(crate) fn mcp_tool_to_openai_tool(
+pub(crate) fn mcp_tool_to_ltn_tool(
     fully_qualified_name: String,
     tool: mcp_types::Tool,
 ) -> Result<ResponsesApiTool, serde_json::Error> {
@@ -985,7 +985,7 @@ pub(crate) fn build_specs(
         entries.sort_by(|a, b| a.0.cmp(&b.0));
 
         for (name, tool) in entries.into_iter() {
-            match mcp_tool_to_openai_tool(name.clone(), tool.clone()) {
+            match mcp_tool_to_ltn_tool(name.clone(), tool.clone()) {
                 Ok(converted_tool) => {
                     builder.push_spec(ToolSpec::Function(converted_tool));
                     builder.register_handler(name, mcp_handler.clone());
@@ -1661,7 +1661,7 @@ mod tests {
     }
 
     #[test]
-    fn test_get_openai_tools_mcp_tools_with_additional_properties_schema() {
+    fn test_get_ltn_tools_mcp_tools_with_additional_properties_schema() {
         let model_family = find_family_for_model("gpt-5-codex")
             .expect("gpt-5-codex should be a valid model family");
         let mut features = Features::with_defaults();

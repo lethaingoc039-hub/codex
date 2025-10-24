@@ -86,7 +86,7 @@ fn assert_message_ends_with(request_body: &serde_json::Value, text: &str) {
 #[expect(clippy::unwrap_used)]
 fn write_auth_json(
     codex_home: &TempDir,
-    openai_api_key: Option<&str>,
+    ltn_api_key: Option<&str>,
     chatgpt_plan_type: &str,
     access_token: &str,
     account_id: Option<&str>,
@@ -118,7 +118,7 @@ fn write_auth_json(
     }
 
     let auth_json = json!({
-        "OPENAI_API_KEY": openai_api_key,
+        "LTN_API_KEY": openai_api_key,
         "tokens": tokens,
         // RFC3339 datetime; value doesn't matter for these tests
         "last_refresh": chrono::Utc::now(),

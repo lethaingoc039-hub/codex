@@ -147,7 +147,7 @@ How long Codex will wait for activity on a streaming response before treating th
 
 ### model_provider
 
-Identifies which provider to use from the `model_providers` map. Defaults to `"openai"`. You can override the `base_url` for the built-in `openai` provider via the `LTN_BASE_URL` environment variable.
+Identifies which provider to use from the `model_providers` map. Defaults to `"ltn"`. You can override the `base_url` for the built-in `ltn` provider via the `LTN_BASE_URL` environment variable.
 
 Note that if you override `model_provider`, then you likely want to override
 `model`, as well. For example, if you are running ollama with Mistral locally,
@@ -857,7 +857,7 @@ If `forced_chatgpt_workspace_id` is set but `forced_login_method` is not set, AP
 | Key                                              | Type / Values                                                     | Notes                                                                                                                      |
 | ------------------------------------------------ | ----------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------- |
 | `model`                                          | string                                                            | Model to use (e.g., `gpt-5-codex`).                                                                                        |
-| `model_provider`                                 | string                                                            | Provider id from `model_providers` (default: `openai`).                                                                    |
+| `model_provider`                                 | string                                                            | Provider id from `model_providers` (default: `ltn`).                                                                    |
 | `model_context_window`                           | number                                                            | Context window tokens.                                                                                                     |
 | `model_max_output_tokens`                        | number                                                            | Max output tokens.                                                                                                         |
 | `approval_policy`                                | `untrusted` \| `on-failure` \| `on-request` \| `never`            | When to prompt for approval.                                                                                               |

@@ -58,7 +58,7 @@ pub use auth::AuthManager;
 pub use auth::CodexAuth;
 pub mod default_client;
 pub mod model_family;
-mod openai_model_info;
+mod ltn_model_info;
 pub mod project_doc;
 mod rollout;
 pub(crate) mod safety;

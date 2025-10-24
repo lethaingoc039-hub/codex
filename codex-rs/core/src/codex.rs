@@ -69,7 +69,7 @@ use crate::exec::StreamOutput;
 use crate::mcp::auth::compute_auth_statuses;
 use crate::mcp_connection_manager::McpConnectionManager;
 use crate::model_family::find_family_for_model;
-use crate::openai_model_info::get_model_info;
+use crate::ltn_model_info::get_model_info;
 use crate::project_doc::get_user_instructions;
 use crate::protocol::AgentMessageDeltaEvent;
 use crate::protocol::AgentReasoningDeltaEvent;

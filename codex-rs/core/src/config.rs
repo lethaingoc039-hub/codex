@@ -28,7 +28,7 @@ use crate::model_family::derive_default_model_family;
 use crate::model_family::find_family_for_model;
 use crate::model_provider_info::ModelProviderInfo;
 use crate::model_provider_info::built_in_model_providers;
-use crate::openai_model_info::get_model_info;
+use crate::ltn_model_info::get_model_info;
 use crate::project_doc::DEFAULT_PROJECT_DOC_FILENAME;
 use crate::project_doc::LOCAL_PROJECT_DOC_FILENAME;
 use crate::protocol::AskForApproval;
@@ -1297,17 +1297,17 @@ impl Config {
             model_family.reasoning_summary_format = model_reasoning_summary_format;
         }
 
-        let openai_model_info = get_model_info(&model_family);
+        let ltn_model_info = get_model_info(&model_family);
         let model_context_window = cfg
             .model_context_window
-            .or_else(|| openai_model_info.as_ref().map(|info| info.context_window));
+            .or_else(|| ltn_model_info.as_ref().map(|info| info.context_window));
         let model_max_output_tokens = cfg.model_max_output_tokens.or_else(|| {
-            openai_model_info
+            ltn_model_info
                 .as_ref()
                 .map(|info| info.max_output_tokens)
         });
         let model_auto_compact_token_limit = cfg.model_auto_compact_token_limit.or_else(|| {
-            openai_model_info
+            ltn_model_info
                 .as_ref()
                 .and_then(|info| info.auto_compact_token_limit)
         });

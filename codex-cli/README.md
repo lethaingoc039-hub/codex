@@ -99,7 +99,7 @@ export LTN_API_KEY="your-api-key-here"
 
 > Codex also allows you to use other providers that support the OpenAI Chat Completions API. You can set the provider in the config file or use the `--provider` flag. The possible options for `--provider` are:
 >
-> - openai (default)
+> - ltn (default)
 > - openrouter
 > - azure
 > - gemini
