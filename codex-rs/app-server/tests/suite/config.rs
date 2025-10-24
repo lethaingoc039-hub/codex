@@ -53,7 +53,7 @@ approval_policy = "on-request"
 model_reasoning_effort = "high"
 model_reasoning_summary = "detailed"
 model_verbosity = "medium"
-model_provider = "openai"
+model_provider = "ltn"
 chatgpt_base_url = "https://api.chatgpt.com"
 "#,
     )
@@ -114,7 +114,7 @@ async fn get_config_toml_parses_all_fields() {
                     model_reasoning_effort: Some(ReasoningEffort::High),
                     model_reasoning_summary: Some(ReasoningSummary::Detailed),
                     model_verbosity: Some(Verbosity::Medium),
-                    model_provider: Some("openai".into()),
+                    model_provider: Some("ltn".into()),
                     chatgpt_base_url: Some("https://api.chatgpt.com".into()),
                 },
             )]),

@@ -91,7 +91,7 @@ async fn codex_mini_latest_tools() {
 
     let model_provider = ModelProviderInfo {
         base_url: Some(format!("{}/v1", server.uri())),
-        ..built_in_model_providers()["openai"].clone()
+        ..built_in_model_providers()["ltn"].clone()
     };
 
     let cwd = TempDir::new().unwrap();
@@ -176,7 +176,7 @@ async fn prompt_tools_are_consistent_across_requests() {
 
     let model_provider = ModelProviderInfo {
         base_url: Some(format!("{}/v1", server.uri())),
-        ..built_in_model_providers()["openai"].clone()
+        ..built_in_model_providers()["ltn"].clone()
     };
 
     let cwd = TempDir::new().unwrap();
@@ -298,7 +298,7 @@ async fn prefixes_context_and_instructions_once_and_consistently_across_requests
 
     let model_provider = ModelProviderInfo {
         base_url: Some(format!("{}/v1", server.uri())),
-        ..built_in_model_providers()["openai"].clone()
+        ..built_in_model_providers()["ltn"].clone()
     };
 
     let cwd = TempDir::new().unwrap();
@@ -417,7 +417,7 @@ async fn overrides_turn_context_but_keeps_cached_prefix_and_key_constant() {
 
     let model_provider = ModelProviderInfo {
         base_url: Some(format!("{}/v1", server.uri())),
-        ..built_in_model_providers()["openai"].clone()
+        ..built_in_model_providers()["ltn"].clone()
     };
 
     let cwd = TempDir::new().unwrap();
@@ -545,7 +545,7 @@ async fn per_turn_overrides_keep_cached_prefix_and_key_constant() {
 
     let model_provider = ModelProviderInfo {
         base_url: Some(format!("{}/v1", server.uri())),
-        ..built_in_model_providers()["openai"].clone()
+        ..built_in_model_providers()["ltn"].clone()
     };
 
     let cwd = TempDir::new().unwrap();
@@ -668,7 +668,7 @@ async fn send_user_turn_with_no_changes_does_not_send_environment_context() {
 
     let model_provider = ModelProviderInfo {
         base_url: Some(format!("{}/v1", server.uri())),
-        ..built_in_model_providers()["openai"].clone()
+        ..built_in_model_providers()["ltn"].clone()
     };
 
     let cwd = TempDir::new().unwrap();
@@ -782,7 +782,7 @@ async fn send_user_turn_with_changes_sends_environment_context() {
 
     let model_provider = ModelProviderInfo {
         base_url: Some(format!("{}/v1", server.uri())),
-        ..built_in_model_providers()["openai"].clone()
+        ..built_in_model_providers()["ltn"].clone()
     };
 
     let cwd = TempDir::new().unwrap();

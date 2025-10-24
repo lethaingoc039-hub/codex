@@ -48,7 +48,7 @@ async fn fork_conversation_twice_drops_to_first_message() {
     // Configure Codex to use the mock server.
     let model_provider = ModelProviderInfo {
         base_url: Some(format!("{}/v1", server.uri())),
-        ..built_in_model_providers()["openai"].clone()
+        ..built_in_model_providers()["ltn"].clone()
     };
 
     let home = TempDir::new().unwrap();

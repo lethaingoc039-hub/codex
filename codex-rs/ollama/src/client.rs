@@ -9,7 +9,7 @@ use crate::parser::pull_events_from_value;
 use crate::pull::PullEvent;
 use crate::pull::PullProgressReporter;
 use crate::url::base_url_to_host_root;
-use crate::url::is_openai_compatible_base_url;
+use crate::url::is_ltn_compatible_base_url;
 use codex_core::BUILT_IN_OSS_MODEL_PROVIDER_ID;
 use codex_core::ModelProviderInfo;
 use codex_core::WireApi;
@@ -21,7 +21,7 @@ const OLLAMA_CONNECTION_ERROR: &str = "No running Ollama server detected. Start 
 pub struct OllamaClient {
     client: reqwest::Client,
     host_root: String,
-    uses_openai_compat: bool,
+    uses_ltn_compat: bool,
 }
 
 impl OllamaClient {
@@ -58,9 +58,8 @@ impl OllamaClient {
             .base_url
             .as_ref()
             .expect("oss provider must have a base_url");
-        let uses_openai_compat = is_openai_compatible_base_url(base_url)
-            || matches!(provider.wire_api, WireApi::Chat)
-                && is_openai_compatible_base_url(base_url);
+        let uses_ltn_compat = is_ltn_compatible_base_url(base_url)
+            || matches!(provider.wire_api, WireApi::Chat) && is_ltn_compatible_base_url(base_url);
         let host_root = base_url_to_host_root(base_url);
         let client = reqwest::Client::builder()
             .connect_timeout(std::time::Duration::from_secs(5))
@@ -69,7 +68,7 @@ impl OllamaClient {
         let client = Self {
             client,
             host_root,
-            uses_openai_compat,
+            uses_ltn_compat,
         };
         client.probe_server().await?;
         Ok(client)
@@ -77,7 +76,7 @@ impl OllamaClient {
 
     /// Probe whether the server is reachable by hitting the appropriate health endpoint.
     async fn probe_server(&self) -> io::Result<()> {
-        let url = if self.uses_openai_compat {
+        let url = if self.uses_ltn_compat {
             format!("{}/v1/models", self.host_root.trim_end_matches('/'))
         } else {
             format!("{}/api/tags", self.host_root.trim_end_matches('/'))
@@ -227,7 +226,7 @@ impl OllamaClient {
         Self {
             client,
             host_root: host_root.into(),
-            uses_openai_compat: false,
+            uses_ltn_compat: false,
         }
     }
 }
@@ -269,10 +268,10 @@ mod tests {
     }
 
     #[tokio::test]
-    async fn test_probe_server_happy_path_openai_compat_and_native() {
+    async fn test_probe_server_happy_path_ltn_compat_and_native() {
         if std::env::var(codex_core::spawn::CODEX_SANDBOX_NETWORK_DISABLED_ENV_VAR).is_ok() {
             tracing::info!(
-                "{} set; skipping test_probe_server_happy_path_openai_compat_and_native",
+                "{} set; skipping test_probe_server_happy_path_ltn_compat_and_native",
                 codex_core::spawn::CODEX_SANDBOX_NETWORK_DISABLED_ENV_VAR
             );
             return;
@@ -289,7 +288,7 @@ mod tests {
         let native = OllamaClient::from_host_root(server.uri());
         native.probe_server().await.expect("probe native");
 
-        // OpenAI compatibility endpoint
+        // Ltn compatibility endpoint
         wiremock::Mock::given(wiremock::matchers::method("GET"))
             .and(wiremock::matchers::path("/v1/models"))
             .respond_with(wiremock::ResponseTemplate::new(200))
@@ -298,11 +297,11 @@ mod tests {
         let ollama_client =
             OllamaClient::try_from_provider_with_base_url(&format!("{}/v1", server.uri()))
                 .await
-                .expect("probe OpenAI compat");
+                .expect("probe Ltn compat");
         ollama_client
             .probe_server()
             .await
-            .expect("probe OpenAI compat");
+            .expect("probe Ltn compat");
     }
 
     #[tokio::test]
@@ -317,7 +316,7 @@ mod tests {
 
         let server = wiremock::MockServer::start().await;
 
-        // OpenAI‑compat models endpoint responds OK.
+        // Ltn‑compat models endpoint responds OK.
         wiremock::Mock::given(wiremock::matchers::method("GET"))
             .and(wiremock::matchers::path("/v1/models"))
             .respond_with(wiremock::ResponseTemplate::new(200))

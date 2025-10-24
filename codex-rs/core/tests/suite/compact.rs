@@ -91,7 +91,7 @@ async fn summarize_context_three_requests_and_instructions() {
     // Build config pointing to the mock server and spawn Codex.
     let model_provider = ModelProviderInfo {
         base_url: Some(format!("{}/v1", server.uri())),
-        ..built_in_model_providers()["openai"].clone()
+        ..built_in_model_providers()["ltn"].clone()
     };
     let home = TempDir::new().unwrap();
     let mut config = load_default_config_for_test(&home);
@@ -308,7 +308,7 @@ async fn auto_compact_runs_after_token_limit_hit() {
 
     let model_provider = ModelProviderInfo {
         base_url: Some(format!("{}/v1", server.uri())),
-        ..built_in_model_providers()["openai"].clone()
+        ..built_in_model_providers()["ltn"].clone()
     };
 
     let home = TempDir::new().unwrap();
@@ -453,7 +453,7 @@ async fn auto_compact_persists_rollout_entries() {
 
     let model_provider = ModelProviderInfo {
         base_url: Some(format!("{}/v1", server.uri())),
-        ..built_in_model_providers()["openai"].clone()
+        ..built_in_model_providers()["ltn"].clone()
     };
 
     let home = TempDir::new().unwrap();
@@ -564,7 +564,7 @@ async fn auto_compact_stops_after_failed_attempt() {
 
     let model_provider = ModelProviderInfo {
         base_url: Some(format!("{}/v1", server.uri())),
-        ..built_in_model_providers()["openai"].clone()
+        ..built_in_model_providers()["ltn"].clone()
     };
 
     let home = TempDir::new().unwrap();
@@ -659,7 +659,7 @@ async fn manual_compact_retries_after_context_window_error() {
 
     let model_provider = ModelProviderInfo {
         base_url: Some(format!("{}/v1", server.uri())),
-        ..built_in_model_providers()["openai"].clone()
+        ..built_in_model_providers()["ltn"].clone()
     };
 
     let home = TempDir::new().unwrap();
@@ -786,7 +786,7 @@ async fn auto_compact_allows_multiple_attempts_when_interleaved_with_other_turn_
 
     let model_provider = ModelProviderInfo {
         base_url: Some(format!("{}/v1", server.uri())),
-        ..built_in_model_providers()["openai"].clone()
+        ..built_in_model_providers()["ltn"].clone()
     };
 
     let home = TempDir::new().unwrap();
@@ -896,7 +896,7 @@ async fn auto_compact_triggers_after_function_call_over_95_percent_usage() {
 
     let model_provider = ModelProviderInfo {
         base_url: Some(format!("{}/v1", server.uri())),
-        ..built_in_model_providers()["openai"].clone()
+        ..built_in_model_providers()["ltn"].clone()
     };
 
     let home = TempDir::new().unwrap();

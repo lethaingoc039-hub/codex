@@ -73,7 +73,7 @@ fn status_snapshot_includes_reasoning_details() {
     let temp_home = TempDir::new().expect("temp home");
     let mut config = test_config(&temp_home);
     config.model = "gpt-5-codex".to_string();
-    config.model_provider_id = "openai".to_string();
+    config.model_provider_id = "ltn".to_string();
     config.model_reasoning_effort = Some(ReasoningEffort::High);
     config.model_reasoning_summary = ReasoningSummary::Detailed;
     config.sandbox_policy = SandboxPolicy::WorkspaceWrite {
@@ -127,7 +127,7 @@ fn status_snapshot_includes_monthly_limit() {
     let temp_home = TempDir::new().expect("temp home");
     let mut config = test_config(&temp_home);
     config.model = "gpt-5-codex".to_string();
-    config.model_provider_id = "openai".to_string();
+    config.model_provider_id = "ltn".to_string();
     config.cwd = PathBuf::from("/workspace/tests");
 
     let usage = TokenUsage {
@@ -192,7 +192,7 @@ fn status_snapshot_truncates_in_narrow_terminal() {
     let temp_home = TempDir::new().expect("temp home");
     let mut config = test_config(&temp_home);
     config.model = "gpt-5-codex".to_string();
-    config.model_provider_id = "openai".to_string();
+    config.model_provider_id = "ltn".to_string();
     config.model_reasoning_effort = Some(ReasoningEffort::High);
     config.model_reasoning_summary = ReasoningSummary::Detailed;
     config.cwd = PathBuf::from("/workspace/tests");

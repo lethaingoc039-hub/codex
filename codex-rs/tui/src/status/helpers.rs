@@ -94,7 +94,7 @@ pub(crate) fn compose_account_display(config: &Config) -> Option<StatusAccountDi
         return Some(StatusAccountDisplay::ChatGpt { email, plan });
     }
 
-    if let Some(key) = auth.openai_api_key
+    if let Some(key) = auth.ltn_api_key
         && !key.is_empty()
     {
         return Some(StatusAccountDisplay::ApiKey);

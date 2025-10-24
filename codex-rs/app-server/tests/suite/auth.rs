@@ -18,11 +18,11 @@ const DEFAULT_READ_TIMEOUT: std::time::Duration = std::time::Duration::from_secs
 
 fn create_config_toml_custom_provider(
     codex_home: &Path,
-    requires_openai_auth: bool,
+    requires_ltn_auth: bool,
 ) -> std::io::Result<()> {
     let config_toml = codex_home.join("config.toml");
-    let requires_line = if requires_openai_auth {
-        "requires_openai_auth = true\n"
+    let requires_line = if requires_ltn_auth {
+        "requires_ltn_auth = true\n"
     } else {
         ""
     };
@@ -193,9 +193,9 @@ async fn get_auth_status_with_api_key_when_auth_not_required() {
     assert_eq!(status.auth_method, None, "expected no auth method");
     assert_eq!(status.auth_token, None, "expected no token");
     assert_eq!(
-        status.requires_openai_auth,
+        status.requires_ltn_auth,
         Some(false),
-        "requires_openai_auth should be false",
+        "requires_ltn_auth should be false",
     );
 }
 

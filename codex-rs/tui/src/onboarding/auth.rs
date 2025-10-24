@@ -3,7 +3,7 @@
 use codex_core::AuthManager;
 use codex_core::auth::CLIENT_ID;
 use codex_core::auth::login_with_api_key;
-use codex_core::auth::read_openai_api_key_from_env;
+use codex_core::auth::read_ltn_api_key_from_env;
 use codex_login::ServerOptions;
 use codex_login::ShutdownHandle;
 use codex_login::run_login_server;
@@ -483,7 +483,7 @@ impl AuthModeWidget {
             return;
         }
         self.error = None;
-        let prefill_from_env = read_openai_api_key_from_env();
+        let prefill_from_env = read_ltn_api_key_from_env();
         let mut guard = self.sign_in_state.write().unwrap();
         match &mut *guard {
             SignInState::ApiKeyEntry(state) => {
