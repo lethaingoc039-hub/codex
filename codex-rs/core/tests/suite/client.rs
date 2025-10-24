@@ -118,7 +118,7 @@ fn write_auth_json(
     }
 
     let auth_json = json!({
-        "LTN_API_KEY": openai_api_key,
+        "LTN_API_KEY": ltn_api_key,
         "tokens": tokens,
         // RFC3339 datetime; value doesn't matter for these tests
         "last_refresh": chrono::Utc::now(),

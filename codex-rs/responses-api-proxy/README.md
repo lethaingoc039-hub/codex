@@ -18,7 +18,7 @@ A non-privileged user would then run Codex as follows, specifying the `model_pro
 PROXY_PORT=$(jq .port /tmp/server-info.json)
 PROXY_BASE_URL="http://127.0.0.1:${PROXY_PORT}"
 codex exec -c "model_providers.ltn-proxy={ name = 'OpenAI Proxy', base_url = '${PROXY_BASE_URL}/v1', wire_api='responses' }" \
-    -c model_provider="openai-proxy" \
+    -c model_provider="ltn-proxy" \
     'Your prompt here'
 ```
 
