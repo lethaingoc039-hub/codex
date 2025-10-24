@@ -4,7 +4,7 @@ use crate::model_family::ModelFamily;
 pub(crate) const CONTEXT_WINDOW_272K: i64 = 272_000;
 pub(crate) const MAX_OUTPUT_TOKENS_128K: i64 = 128_000;
 
-/// Metadata about a model, particularly OpenAI models.
+/// Metadata about a model, particularly Ltn models.
 /// We may want to consider including details like the pricing for
 /// input tokens, output tokens, etc., though users will need to be able to
 /// override this in config.toml, as this information can get out of date.

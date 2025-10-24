@@ -94,9 +94,7 @@ impl CodexAuth {
                         try_refresh_token(tokens.refresh_token.clone(), &self.client),
                     )
                     .await
-                    .map_err(|_| {
-                        std::io::Error::other("timed out while refreshing OpenAI API key")
-                    })?
+                    .map_err(|_| std::io::Error::other("timed out while refreshing Ltn API key"))?
                     .map_err(std::io::Error::other)?;
 
                     let updated_auth_dot_json = update_tokens(
@@ -160,7 +158,7 @@ impl CodexAuth {
     /// Consider this private to integration tests.
     pub fn create_dummy_chatgpt_auth_for_testing() -> Self {
         let auth_dot_json = AuthDotJson {
-            openai_api_key: None,
+            ltn_api_key: None,
             tokens: Some(TokenData {
                 id_token: Default::default(),
                 access_token: "Access Token".to_string(),
@@ -195,11 +193,11 @@ impl CodexAuth {
     }
 }
 
-pub const OPENAI_API_KEY_ENV_VAR: &str = "OPENAI_API_KEY";
+pub const LTN_API_KEY_ENV_VAR: &str = "LTN_API_KEY";
 pub const CODEX_API_KEY_ENV_VAR: &str = "CODEX_API_KEY";
 
-pub fn read_openai_api_key_from_env() -> Option<String> {
-    env::var(OPENAI_API_KEY_ENV_VAR)
+pub fn read_ltn_api_key_from_env() -> Option<String> {
+    env::var(LTN_API_KEY_ENV_VAR)
         .ok()
         .map(|value| value.trim().to_string())
         .filter(|value| !value.is_empty())
@@ -230,7 +228,7 @@ pub fn logout(codex_home: &Path) -> std::io::Result<bool> {
 /// Writes an `auth.json` that contains only the API key.
 pub fn login_with_api_key(codex_home: &Path, api_key: &str) -> std::io::Result<()> {
     let auth_dot_json = AuthDotJson {
-        openai_api_key: Some(api_key.to_string()),
+        ltn_api_key: Some(api_key.to_string()),
         tokens: None,
         last_refresh: None,
     };
@@ -326,7 +324,7 @@ fn load_auth(
     };
 
     let AuthDotJson {
-        openai_api_key: auth_json_api_key,
+        ltn_api_key: auth_json_api_key,
         tokens,
         last_refresh,
     } = auth_dot_json;
@@ -341,7 +339,7 @@ fn load_auth(
         mode: AuthMode::ChatGPT,
         auth_file,
         auth_dot_json: Arc::new(Mutex::new(Some(AuthDotJson {
-            openai_api_key: None,
+            ltn_api_key: None,
             tokens,
             last_refresh,
         }))),
@@ -450,8 +448,8 @@ struct RefreshResponse {
 /// Expected structure for $CODEX_HOME/auth.json.
 #[derive(Deserialize, Serialize, Clone, Debug, PartialEq)]
 pub struct AuthDotJson {
-    #[serde(rename = "OPENAI_API_KEY")]
-    pub openai_api_key: Option<String>,
+    #[serde(rename = "LTN_API_KEY")]
+    pub ltn_api_key: Option<String>,
 
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub tokens: Option<TokenData>,
@@ -492,7 +490,7 @@ mod tests {
         let codex_home = tempdir().unwrap();
         let _ = write_auth_file(
             AuthFileParams {
-                openai_api_key: None,
+                ltn_api_key: None,
                 chatgpt_plan_type: "pro".to_string(),
                 chatgpt_account_id: None,
             },
@@ -513,7 +511,7 @@ mod tests {
         let dir = tempdir().unwrap();
         let auth_path = dir.path().join("auth.json");
         let stale_auth = json!({
-            "OPENAI_API_KEY": "sk-old",
+            "LTN_API_KEY": "sk-old",
             "tokens": {
                 "id_token": "stale.header.payload",
                 "access_token": "stale-access",
@@ -530,7 +528,7 @@ mod tests {
         super::login_with_api_key(dir.path(), "sk-new").expect("login_with_api_key should succeed");
 
         let auth = super::try_read_auth_json(&auth_path).expect("auth.json should parse");
-        assert_eq!(auth.openai_api_key.as_deref(), Some("sk-new"));
+        assert_eq!(auth.ltn_api_key.as_deref(), Some("sk-new"));
         assert!(auth.tokens.is_none(), "tokens should be cleared");
     }
 
@@ -547,7 +545,7 @@ mod tests {
         let codex_home = tempdir().unwrap();
         let fake_jwt = write_auth_file(
             AuthFileParams {
-                openai_api_key: None,
+                ltn_api_key: None,
                 chatgpt_plan_type: "pro".to_string(),
                 chatgpt_account_id: None,
             },
@@ -573,7 +571,7 @@ mod tests {
 
         assert_eq!(
             &AuthDotJson {
-                openai_api_key: None,
+                ltn_api_key: None,
                 tokens: Some(TokenData {
                     id_token: IdTokenInfo {
                         email: Some("user@example.com".to_string()),
@@ -598,7 +596,7 @@ mod tests {
         let auth_file = dir.path().join("auth.json");
         std::fs::write(
             auth_file,
-            r#"{"OPENAI_API_KEY":"sk-test-key","tokens":null,"last_refresh":null}"#,
+            r#"{"LTN_API_KEY":"sk-test-key","tokens":null,"last_refresh":null}"#,
         )
         .unwrap();
 
@@ -613,7 +611,7 @@ mod tests {
     fn logout_removes_auth_file() -> Result<(), std::io::Error> {
         let dir = tempdir()?;
         let auth_dot_json = AuthDotJson {
-            openai_api_key: Some("sk-test-key".to_string()),
+            ltn_api_key: Some("sk-test-key".to_string()),
             tokens: None,
             last_refresh: None,
         };
@@ -626,7 +624,7 @@ mod tests {
     }
 
     struct AuthFileParams {
-        openai_api_key: Option<String>,
+        ltn_api_key: Option<String>,
         chatgpt_plan_type: String,
         chatgpt_account_id: Option<String>,
     }
@@ -666,7 +664,7 @@ mod tests {
         let fake_jwt = format!("{header_b64}.{payload_b64}.{signature_b64}");
 
         let auth_json_data = json!({
-            "OPENAI_API_KEY": params.openai_api_key,
+            "LTN_API_KEY": params.ltn_api_key,
             "tokens": {
                 "id_token": fake_jwt,
                 "access_token": "test-access-token",
@@ -749,7 +747,7 @@ mod tests {
         let codex_home = tempdir().unwrap();
         let _jwt = write_auth_file(
             AuthFileParams {
-                openai_api_key: None,
+                ltn_api_key: None,
                 chatgpt_plan_type: "pro".to_string(),
                 chatgpt_account_id: Some("org_another_org".to_string()),
             },
@@ -775,7 +773,7 @@ mod tests {
         let codex_home = tempdir().unwrap();
         let _jwt = write_auth_file(
             AuthFileParams {
-                openai_api_key: None,
+                ltn_api_key: None,
                 chatgpt_plan_type: "pro".to_string(),
                 chatgpt_account_id: Some("org_mine".to_string()),
             },

@@ -15,7 +15,7 @@ Codex supports several mechanisms for setting config values:
 
 - Config-specific command-line flags, such as `--model o3` (highest precedence).
 - A generic `-c`/`--config` flag that takes a `key=value` pair, such as `--config model="o3"`.
-  - The key can contain dots to set a value deeper than the root, e.g. `--config model_providers.openai.wire_api="chat"`.
+  - The key can contain dots to set a value deeper than the root, e.g. `--config model_providers.ltn.wire_api="chat"`.
   - For consistency with `config.toml`, values are a string in TOML format rather than JSON format, so use `key='{a = 1, b = 2}'` rather than `key='{"a": 1, "b": 2}'`.
     - The quotes around the value are necessary, as without them your shell would split the config argument on spaces, resulting in `codex` receiving `-c key={a` with (invalid) additional arguments `=`, `1,`, `b`, `=`, `2}`.
   - Values can contain any TOML object, such as `--config shell_environment_policy.include_only='["PATH", "HOME", "USER"]'`.
@@ -41,16 +41,16 @@ model = "gpt-5"  # overrides the default ("gpt-5-codex" on macOS/Linux, "gpt-5" 
 This option lets you add to the default set of model providers bundled with Codex. The map key becomes the value you use with `model_provider` to select the provider.
 
 > [!NOTE]
-> Built-in providers are not overwritten when you reuse their key. Entries you add only take effect when the key is **new**; for example `[model_providers.openai]` leaves the original OpenAI definition untouched. To customize the bundled OpenAI provider, prefer the dedicated knobs (for example the `OPENAI_BASE_URL` environment variable) or register a new provider key and point `model_provider` at it.
+> Built-in providers are not overwritten when you reuse their key. Entries you add only take effect when the key is **new**; for example `[model_providers.ltn]` leaves the original OpenAI definition untouched. To customize the bundled OpenAI provider, prefer the dedicated knobs (for example the `LTN_BASE_URL` environment variable) or register a new provider key and point `model_provider` at it.
 
 For example, if you wanted to add a provider that uses the OpenAI 4o model via the chat completions API, then you could add the following configuration:
 
 ```toml
 # Recall that in TOML, root keys must be listed before tables.
 model = "gpt-4o"
-model_provider = "openai-chat-completions"
+model_provider = "ltn-chat-completions"
 
-[model_providers.openai-chat-completions]
+[model_providers.ltn-chat-completions]
 # Name of the provider that will be displayed in the Codex UI.
 name = "OpenAI using Chat Completions"
 # The path `/chat/completions` will be amended to this URL to make the POST
@@ -59,7 +59,7 @@ base_url = "https://api.openai.com/v1"
 # If `env_key` is set, identifies an environment variable that must be set when
 # using Codex with this provider. The value of the environment variable must be
 # non-empty and will be used in the `Bearer TOKEN` HTTP header for the POST request.
-env_key = "OPENAI_API_KEY"
+env_key = "LTN_API_KEY"
 # Valid values for wire_api are "chat" and "responses". Defaults to "chat" if omitted.
 wire_api = "chat"
 # If necessary, extra query params that need to be added to the URL.
@@ -109,12 +109,12 @@ Note that Azure requires `api-version` to be passed as a query parameter, so be 
 name = "Azure"
 # Make sure you set the appropriate subdomain for this URL.
 base_url = "https://YOUR_PROJECT_NAME.openai.azure.com/openai"
-env_key = "AZURE_OPENAI_API_KEY"  # Or "OPENAI_API_KEY", whichever you use.
+env_key = "AZURE_LTN_API_KEY"  # Or "LTN_API_KEY", whichever you use.
 query_params = { api-version = "2025-04-01-preview" }
 wire_api = "responses"
 ```
 
-Export your key before launching Codex: `export AZURE_OPENAI_API_KEY=…`
+Export your key before launching Codex: `export AZURE_LTN_API_KEY=…`
 
 #### Per-provider network tuning
 
@@ -123,10 +123,10 @@ The following optional settings control retry behaviour and streaming idle timeo
 Example:
 
 ```toml
-[model_providers.openai]
+[model_providers.ltn]
 name = "OpenAI"
 base_url = "https://api.openai.com/v1"
-env_key = "OPENAI_API_KEY"
+env_key = "LTN_API_KEY"
 # network tuning overrides (all optional; falls back to built‑in defaults)
 request_max_retries = 4            # retry failed HTTP requests
 stream_max_retries = 10            # retry dropped SSE streams
@@ -147,7 +147,7 @@ How long Codex will wait for activity on a streaming response before treating th
 
 ### model_provider
 
-Identifies which provider to use from the `model_providers` map. Defaults to `"openai"`. You can override the `base_url` for the built-in `openai` provider via the `OPENAI_BASE_URL` environment variable.
+Identifies which provider to use from the `model_providers` map. Defaults to `"ltn"`. You can override the `base_url` for the built-in `ltn` provider via the `LTN_BASE_URL` environment variable.
 
 Note that if you override `model_provider`, then you likely want to override
 `model`, as well. For example, if you are running ollama with Mistral locally,
@@ -233,7 +233,7 @@ Determines when the user should be prompted to approve whether Codex can execute
 # Setting the approval_policy to `untrusted` means that Codex will prompt the
 # user before running a command not in the "trusted" set.
 #
-# See https://github.com/openai/codex/issues/1260 for the plan to enable
+# See https://github.com/lethaingoc039-hub/codex/issues/1260 for the plan to enable
 # end-users to define their own trusted commands.
 approval_policy = "untrusted"
 ```
@@ -397,7 +397,7 @@ command = "npx"
 args = ["-y", "mcp-server"]
 # Optional: propagate additional env vars to the MVP server.
 # A default whitelist of env vars will be propagated to the MCP server.
-# https://github.com/openai/codex/blob/main/codex-rs/rmcp-client/src/utils.rs#L82
+# https://github.com/lethaingoc039-hub/codex/blob/main/codex-rs/rmcp-client/src/utils.rs#L82
 env = { "API_KEY" = "value" }
 # or
 [mcp_servers.server_name.env]
@@ -743,26 +743,26 @@ approval_policy = "untrusted"
 # line, though the `--profile` flag can still be used to override this value.
 profile = "o3"
 
-[model_providers.openai-chat-completions]
+[model_providers.ltn-chat-completions]
 name = "OpenAI using Chat Completions"
 base_url = "https://api.openai.com/v1"
-env_key = "OPENAI_API_KEY"
+env_key = "LTN_API_KEY"
 wire_api = "chat"
 
 [profiles.o3]
 model = "o3"
-model_provider = "openai"
+model_provider = "ltn"
 approval_policy = "never"
 model_reasoning_effort = "high"
 model_reasoning_summary = "detailed"
 
 [profiles.gpt3]
 model = "gpt-3.5-turbo"
-model_provider = "openai-chat-completions"
+model_provider = "ltn-chat-completions"
 
 [profiles.zdr]
 model = "o3"
-model_provider = "openai"
+model_provider = "ltn"
 approval_policy = "on-failure"
 ```
 
@@ -857,7 +857,7 @@ If `forced_chatgpt_workspace_id` is set but `forced_login_method` is not set, AP
 | Key                                              | Type / Values                                                     | Notes                                                                                                                      |
 | ------------------------------------------------ | ----------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------- |
 | `model`                                          | string                                                            | Model to use (e.g., `gpt-5-codex`).                                                                                        |
-| `model_provider`                                 | string                                                            | Provider id from `model_providers` (default: `openai`).                                                                    |
+| `model_provider`                                 | string                                                            | Provider id from `model_providers` (default: `ltn`).                                                                    |
 | `model_context_window`                           | number                                                            | Context window tokens.                                                                                                     |
 | `model_max_output_tokens`                        | number                                                            | Max output tokens.                                                                                                         |
 | `approval_policy`                                | `untrusted` \| `on-failure` \| `on-request` \| `never`            | When to prompt for approval.                                                                                               |

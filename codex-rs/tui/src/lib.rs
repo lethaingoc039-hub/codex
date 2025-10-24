@@ -462,7 +462,7 @@ pub enum LoginStatus {
 }
 
 fn get_login_status(config: &Config) -> LoginStatus {
-    if config.model_provider.requires_openai_auth {
+    if config.model_provider.requires_ltn_auth {
         // Reading the OpenAI API key is an async operation because it may need
         // to refresh the token. Block on it.
         let codex_home = config.codex_home.clone();
@@ -527,7 +527,7 @@ fn should_show_onboarding(
 fn should_show_login_screen(login_status: LoginStatus, config: &Config) -> bool {
     // Only show the login screen for providers that actually require OpenAI auth
     // (OpenAI or equivalents). For OSS/other providers, skip login entirely.
-    if !config.model_provider.requires_openai_auth {
+    if !config.model_provider.requires_ltn_auth {
         return false;
     }
 

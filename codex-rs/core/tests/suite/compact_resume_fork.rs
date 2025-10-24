@@ -759,7 +759,7 @@ async fn start_test_conversation(
 ) -> (TempDir, Config, ConversationManager, Arc<CodexConversation>) {
     let model_provider = ModelProviderInfo {
         base_url: Some(format!("{}/v1", server.uri())),
-        ..built_in_model_providers()["openai"].clone()
+        ..built_in_model_providers()["ltn"].clone()
     };
     let home = TempDir::new().expect("create temp dir");
     let mut config = load_default_config_for_test(&home);

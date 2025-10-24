@@ -62,7 +62,7 @@ async fn continue_after_stream_error() {
     // server. Use an existing env var (PATH) to satisfy the auth plumbing
     // without requiring a real secret.
     let provider = ModelProviderInfo {
-        name: "mock-openai".into(),
+        name: "mock-ltn".into(),
         base_url: Some(format!("{}/v1", server.uri())),
         env_key: Some("PATH".into()),
         env_key_instructions: None,
@@ -74,7 +74,7 @@ async fn continue_after_stream_error() {
         request_max_retries: Some(1),
         stream_max_retries: Some(1),
         stream_idle_timeout_ms: Some(2_000),
-        requires_openai_auth: false,
+        requires_ltn_auth: false,
     };
 
     let TestCodex { codex, .. } = test_codex()

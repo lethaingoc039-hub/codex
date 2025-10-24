@@ -51,7 +51,7 @@ use crate::flags::CODEX_RS_SSE_FIXTURE;
 use crate::model_family::ModelFamily;
 use crate::model_provider_info::ModelProviderInfo;
 use crate::model_provider_info::WireApi;
-use crate::openai_model_info::get_model_info;
+use crate::ltn_model_info::get_model_info;
 use crate::protocol::RateLimitSnapshot;
 use crate::protocol::RateLimitWindow;
 use crate::protocol::TokenUsage;
@@ -1102,7 +1102,7 @@ mod tests {
             request_max_retries: Some(0),
             stream_max_retries: Some(0),
             stream_idle_timeout_ms: Some(1000),
-            requires_openai_auth: false,
+            requires_ltn_auth: false,
         };
 
         let otel_event_manager = otel_event_manager();
@@ -1166,7 +1166,7 @@ mod tests {
             request_max_retries: Some(0),
             stream_max_retries: Some(0),
             stream_idle_timeout_ms: Some(1000),
-            requires_openai_auth: false,
+            requires_ltn_auth: false,
         };
 
         let otel_event_manager = otel_event_manager();
@@ -1203,7 +1203,7 @@ mod tests {
             request_max_retries: Some(0),
             stream_max_retries: Some(0),
             stream_idle_timeout_ms: Some(1000),
-            requires_openai_auth: false,
+            requires_ltn_auth: false,
         };
 
         let otel_event_manager = otel_event_manager();
@@ -1242,7 +1242,7 @@ mod tests {
             request_max_retries: Some(0),
             stream_max_retries: Some(0),
             stream_idle_timeout_ms: Some(1000),
-            requires_openai_auth: false,
+            requires_ltn_auth: false,
         };
 
         let otel_event_manager = otel_event_manager();
@@ -1277,7 +1277,7 @@ mod tests {
             request_max_retries: Some(0),
             stream_max_retries: Some(0),
             stream_idle_timeout_ms: Some(1000),
-            requires_openai_auth: false,
+            requires_ltn_auth: false,
         };
 
         let otel_event_manager = otel_event_manager();
@@ -1381,7 +1381,7 @@ mod tests {
                 request_max_retries: Some(0),
                 stream_max_retries: Some(0),
                 stream_idle_timeout_ms: Some(1000),
-                requires_openai_auth: false,
+                requires_ltn_auth: false,
             };
 
             let otel_event_manager = otel_event_manager();

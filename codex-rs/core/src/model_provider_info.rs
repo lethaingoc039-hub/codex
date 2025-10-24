@@ -23,7 +23,7 @@ const MAX_STREAM_MAX_RETRIES: u64 = 100;
 const MAX_REQUEST_MAX_RETRIES: u64 = 100;
 
 /// Wire protocol that the provider speaks. Most third-party services only
-/// implement the classic OpenAI Chat Completions JSON schema, whereas OpenAI
+/// implement the classic Ltn Chat Completions JSON schema, whereas Ltn
 /// itself (and a handful of others) additionally expose the more modern
 /// *Responses* API. The two protocols use different request/response shapes
 /// and *cannot* be auto-detected at runtime, therefore each provider entry
@@ -31,7 +31,7 @@ const MAX_REQUEST_MAX_RETRIES: u64 = 100;
 #[derive(Debug, Clone, Copy, Default, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(rename_all = "lowercase")]
 pub enum WireApi {
-    /// The Responses API exposed by OpenAI at `/v1/responses`.
+    /// The Responses API exposed by Ltn at `/v1/responses`.
     Responses,
 
     /// Regular Chat Completions compatible with `/v1/chat/completions`.
@@ -44,7 +44,7 @@ pub enum WireApi {
 pub struct ModelProviderInfo {
     /// Friendly display name.
     pub name: String,
-    /// Base URL for the provider's OpenAI-compatible API.
+    /// Base URL for the provider's Ltn-compatible API.
     pub base_url: Option<String>,
     /// Environment variable that stores the user's API key for this provider.
     pub env_key: Option<String>,
@@ -85,12 +85,12 @@ pub struct ModelProviderInfo {
     /// the connection as lost.
     pub stream_idle_timeout_ms: Option<u64>,
 
-    /// Does this provider require an OpenAI API Key or ChatGPT login token? If true,
+    /// Does this provider require an Ltn API Key or ChatGPT login token? If true,
     /// user is presented with login screen on first run, and login preference and token/key
     /// are stored in auth.json. If false (which is the default), login screen is skipped,
     /// and API key (if needed) comes from the "env_key" environment variable.
     #[serde(default)]
-    pub requires_openai_auth: bool,
+    pub requires_ltn_auth: bool,
 }
 
 impl ModelProviderInfo {
@@ -265,20 +265,20 @@ pub fn built_in_model_providers() -> HashMap<String, ModelProviderInfo> {
     use ModelProviderInfo as P;
 
     // We do not want to be in the business of adjucating which third-party
-    // providers are bundled with Codex CLI, so we only include the OpenAI and
+    // providers are bundled with Codex CLI, so we only include the Ltn and
     // open source ("oss") providers by default. Users are encouraged to add to
     // `model_providers` in config.toml to add their own providers.
     [
         (
-            "openai",
+            "ltn",
             P {
-                name: "OpenAI".into(),
-                // Allow users to override the default OpenAI endpoint by
-                // exporting `OPENAI_BASE_URL`. This is useful when pointing
+                name: "Ltn".into(),
+                // Allow users to override the default Ltn endpoint by
+                // exporting `LTN_BASE_URL`. This is useful when pointing
                 // Codex at a proxy, mock server, or Azure-style deployment
                 // without requiring a full TOML override for the built-in
-                // OpenAI provider.
-                base_url: std::env::var("OPENAI_BASE_URL")
+                // Ltn provider.
+                base_url: std::env::var("LTN_BASE_URL")
                     .ok()
                     .filter(|v| !v.trim().is_empty()),
                 env_key: None,
@@ -294,10 +294,10 @@ pub fn built_in_model_providers() -> HashMap<String, ModelProviderInfo> {
                 env_http_headers: Some(
                     [
                         (
-                            "OpenAI-Organization".to_string(),
-                            "OPENAI_ORGANIZATION".to_string(),
+                            "Ltn-Organization".to_string(),
+                            "LTN_ORGANIZATION".to_string(),
                         ),
-                        ("OpenAI-Project".to_string(), "OPENAI_PROJECT".to_string()),
+                        ("Ltn-Project".to_string(), "LTN_PROJECT".to_string()),
                     ]
                     .into_iter()
                     .collect(),
@@ -306,7 +306,7 @@ pub fn built_in_model_providers() -> HashMap<String, ModelProviderInfo> {
                 request_max_retries: None,
                 stream_max_retries: None,
                 stream_idle_timeout_ms: None,
-                requires_openai_auth: true,
+                requires_ltn_auth: true,
             },
         ),
         (BUILT_IN_OSS_MODEL_PROVIDER_ID, create_oss_provider()),
@@ -351,7 +351,7 @@ pub fn create_oss_provider_with_base_url(base_url: &str) -> ModelProviderInfo {
         request_max_retries: None,
         stream_max_retries: None,
         stream_idle_timeout_ms: None,
-        requires_openai_auth: false,
+        requires_ltn_auth: false,
     }
 }
 
@@ -391,7 +391,7 @@ base_url = "http://localhost:11434/v1"
             request_max_retries: None,
             stream_max_retries: None,
             stream_idle_timeout_ms: None,
-            requires_openai_auth: false,
+            requires_ltn_auth: false,
         };
 
         let provider: ModelProviderInfo = toml::from_str(azure_provider_toml).unwrap();
@@ -403,13 +403,13 @@ base_url = "http://localhost:11434/v1"
         let azure_provider_toml = r#"
 name = "Azure"
 base_url = "https://xxxxx.openai.azure.com/openai"
-env_key = "AZURE_OPENAI_API_KEY"
+env_key = "AZURE_LTN_API_KEY"
 query_params = { api-version = "2025-04-01-preview" }
         "#;
         let expected_provider = ModelProviderInfo {
             name: "Azure".into(),
             base_url: Some("https://xxxxx.openai.azure.com/openai".into()),
-            env_key: Some("AZURE_OPENAI_API_KEY".into()),
+            env_key: Some("AZURE_LTN_API_KEY".into()),
             env_key_instructions: None,
             experimental_bearer_token: None,
             wire_api: WireApi::Chat,
@@ -421,7 +421,7 @@ query_params = { api-version = "2025-04-01-preview" }
             request_max_retries: None,
             stream_max_retries: None,
             stream_idle_timeout_ms: None,
-            requires_openai_auth: false,
+            requires_ltn_auth: false,
         };
 
         let provider: ModelProviderInfo = toml::from_str(azure_provider_toml).unwrap();
@@ -454,7 +454,7 @@ env_http_headers = { "X-Example-Env-Header" = "EXAMPLE_ENV_VAR" }
             request_max_retries: None,
             stream_max_retries: None,
             stream_idle_timeout_ms: None,
-            requires_openai_auth: false,
+            requires_ltn_auth: false,
         };
 
         let provider: ModelProviderInfo = toml::from_str(azure_provider_toml).unwrap();
@@ -477,7 +477,7 @@ env_http_headers = { "X-Example-Env-Header" = "EXAMPLE_ENV_VAR" }
                 request_max_retries: None,
                 stream_max_retries: None,
                 stream_idle_timeout_ms: None,
-                requires_openai_auth: false,
+                requires_ltn_auth: false,
             }
         }
 
@@ -510,7 +510,7 @@ env_http_headers = { "X-Example-Env-Header" = "EXAMPLE_ENV_VAR" }
             request_max_retries: None,
             stream_max_retries: None,
             stream_idle_timeout_ms: None,
-            requires_openai_auth: false,
+            requires_ltn_auth: false,
         };
         assert!(named_provider.is_azure_responses_endpoint());
 

@@ -122,7 +122,7 @@ pub fn write_chatgpt_auth(codex_home: &Path, fixture: ChatGptAuthFixture) -> Res
     let last_refresh = fixture.last_refresh.unwrap_or_else(|| Some(Utc::now()));
 
     let auth = AuthDotJson {
-        openai_api_key: None,
+        ltn_api_key: None,
         tokens: Some(tokens),
         last_refresh,
     };

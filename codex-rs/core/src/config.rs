@@ -28,7 +28,7 @@ use crate::model_family::derive_default_model_family;
 use crate::model_family::find_family_for_model;
 use crate::model_provider_info::ModelProviderInfo;
 use crate::model_provider_info::built_in_model_providers;
-use crate::openai_model_info::get_model_info;
+use crate::ltn_model_info::get_model_info;
 use crate::project_doc::DEFAULT_PROJECT_DOC_FILENAME;
 use crate::project_doc::LOCAL_PROJECT_DOC_FILENAME;
 use crate::protocol::AskForApproval;
@@ -1248,7 +1248,7 @@ impl Config {
         let model_provider_id = model_provider
             .or(config_profile.model_provider)
             .or(cfg.model_provider)
-            .unwrap_or_else(|| "openai".to_string());
+            .unwrap_or_else(|| "ltn".to_string());
         let model_provider = model_providers
             .get(&model_provider_id)
             .ok_or_else(|| {
@@ -1297,17 +1297,17 @@ impl Config {
             model_family.reasoning_summary_format = model_reasoning_summary_format;
         }
 
-        let openai_model_info = get_model_info(&model_family);
+        let ltn_model_info = get_model_info(&model_family);
         let model_context_window = cfg
             .model_context_window
-            .or_else(|| openai_model_info.as_ref().map(|info| info.context_window));
+            .or_else(|| ltn_model_info.as_ref().map(|info| info.context_window));
         let model_max_output_tokens = cfg.model_max_output_tokens.or_else(|| {
-            openai_model_info
+            ltn_model_info
                 .as_ref()
                 .map(|info| info.max_output_tokens)
         });
         let model_auto_compact_token_limit = cfg.model_auto_compact_token_limit.or_else(|| {
-            openai_model_info
+            ltn_model_info
                 .as_ref()
                 .and_then(|info| info.auto_compact_token_limit)
         });
@@ -2702,8 +2702,8 @@ model = "gpt-5-codex"
         codex_home: TempDir,
         cfg: ConfigToml,
         model_provider_map: HashMap<String, ModelProviderInfo>,
-        openai_provider: ModelProviderInfo,
-        openai_chat_completions_provider: ModelProviderInfo,
+        ltn_provider: ModelProviderInfo,
+        ltn_chat_completions_provider: ModelProviderInfo,
     }
 
     impl PrecedenceTestFixture {
@@ -2725,7 +2725,7 @@ approval_policy = "untrusted"
 # `ConfigOverrides`.
 profile = "gpt3"
 
-[model_providers.openai-chat-completions]
+[model_providers.ltn-chat-completions]
 name = "OpenAI using Chat Completions"
 base_url = "https://api.openai.com/v1"
 env_key = "OPENAI_API_KEY"
@@ -2736,23 +2736,23 @@ stream_idle_timeout_ms = 300000    # 5m idle timeout
 
 [profiles.o3]
 model = "o3"
-model_provider = "openai"
+model_provider = "ltn"
 approval_policy = "never"
 model_reasoning_effort = "high"
 model_reasoning_summary = "detailed"
 
 [profiles.gpt3]
 model = "gpt-3.5-turbo"
-model_provider = "openai-chat-completions"
+model_provider = "ltn-chat-completions"
 
 [profiles.zdr]
 model = "o3"
-model_provider = "openai"
+model_provider = "ltn"
 approval_policy = "on-failure"
 
 [profiles.gpt5]
 model = "gpt-5"
-model_provider = "openai"
+model_provider = "ltn"
 approval_policy = "on-failure"
 model_reasoning_effort = "high"
 model_reasoning_summary = "detailed"
@@ -2771,7 +2771,7 @@ model_verbosity = "high"
 
         let codex_home_temp_dir = TempDir::new().unwrap();
 
-        let openai_chat_completions_provider = ModelProviderInfo {
+        let ltn_chat_completions_provider = ModelProviderInfo {
             name: "OpenAI using Chat Completions".to_string(),
             base_url: Some("https://api.openai.com/v1".to_string()),
             env_key: Some("OPENAI_API_KEY".to_string()),
@@ -2784,20 +2784,20 @@ model_verbosity = "high"
             request_max_retries: Some(4),
             stream_max_retries: Some(10),
             stream_idle_timeout_ms: Some(300_000),
-            requires_openai_auth: false,
+            requires_ltn_auth: false,
         };
         let model_provider_map = {
             let mut model_provider_map = built_in_model_providers();
             model_provider_map.insert(
-                "openai-chat-completions".to_string(),
+                "ltn-chat-completions".to_string(),
                 openai_chat_completions_provider.clone(),
             );
             model_provider_map
         };
 
-        let openai_provider = model_provider_map
-            .get("openai")
-            .expect("openai provider should exist")
+        let ltn_provider = model_provider_map
+            .get("ltn")
+            .expect("ltn provider should exist")
             .clone();
 
         Ok(PrecedenceTestFixture {
@@ -2844,8 +2844,8 @@ model_verbosity = "high"
                 model_context_window: Some(200_000),
                 model_max_output_tokens: Some(100_000),
                 model_auto_compact_token_limit: Some(180_000),
-                model_provider_id: "openai".to_string(),
-                model_provider: fixture.openai_provider.clone(),
+                model_provider_id: "ltn".to_string(),
+                model_provider: fixture.ltn_provider.clone(),
                 approval_policy: AskForApproval::Never,
                 sandbox_policy: SandboxPolicy::new_read_only_policy(),
                 did_user_set_custom_approval_policy_or_sandbox_mode: true,
@@ -2912,8 +2912,8 @@ model_verbosity = "high"
             model_context_window: Some(16_385),
             model_max_output_tokens: Some(4_096),
             model_auto_compact_token_limit: Some(14_746),
-            model_provider_id: "openai-chat-completions".to_string(),
-            model_provider: fixture.openai_chat_completions_provider.clone(),
+            model_provider_id: "ltn-chat-completions".to_string(),
+            model_provider: fixture.ltn_chat_completions_provider.clone(),
             approval_policy: AskForApproval::UnlessTrusted,
             sandbox_policy: SandboxPolicy::new_read_only_policy(),
             did_user_set_custom_approval_policy_or_sandbox_mode: true,
@@ -2995,8 +2995,8 @@ model_verbosity = "high"
             model_context_window: Some(200_000),
             model_max_output_tokens: Some(100_000),
             model_auto_compact_token_limit: Some(180_000),
-            model_provider_id: "openai".to_string(),
-            model_provider: fixture.openai_provider.clone(),
+            model_provider_id: "ltn".to_string(),
+            model_provider: fixture.ltn_provider.clone(),
             approval_policy: AskForApproval::OnFailure,
             sandbox_policy: SandboxPolicy::new_read_only_policy(),
             did_user_set_custom_approval_policy_or_sandbox_mode: true,
@@ -3064,8 +3064,8 @@ model_verbosity = "high"
             model_context_window: Some(272_000),
             model_max_output_tokens: Some(128_000),
             model_auto_compact_token_limit: Some(244_800),
-            model_provider_id: "openai".to_string(),
-            model_provider: fixture.openai_provider.clone(),
+            model_provider_id: "ltn".to_string(),
+            model_provider: fixture.ltn_provider.clone(),
             approval_policy: AskForApproval::OnFailure,
             sandbox_policy: SandboxPolicy::new_read_only_policy(),
             did_user_set_custom_approval_policy_or_sandbox_mode: true,

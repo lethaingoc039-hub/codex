@@ -523,15 +523,15 @@ impl CodexMessageProcessor {
         }
 
         // Determine whether auth is required based on the active model provider.
-        // If a custom provider is configured with `requires_openai_auth == false`,
+        // If a custom provider is configured with `requires_ltn_auth == false`,
         // then no auth step is required; otherwise, default to requiring auth.
-        let requires_openai_auth = self.config.model_provider.requires_openai_auth;
+        let requires_ltn_auth = self.config.model_provider.requires_ltn_auth;
 
-        let response = if !requires_openai_auth {
+        let response = if !requires_ltn_auth {
             codex_app_server_protocol::GetAuthStatusResponse {
                 auth_method: None,
                 auth_token: None,
-                requires_openai_auth: Some(false),
+                requires_ltn_auth: Some(false),
             }
         } else {
             match self.auth_manager.auth() {
@@ -551,13 +551,13 @@ impl CodexMessageProcessor {
                     codex_app_server_protocol::GetAuthStatusResponse {
                         auth_method: reported_auth_method,
                         auth_token: token_opt,
-                        requires_openai_auth: Some(true),
+                        requires_ltn_auth: Some(true),
                     }
                 }
                 None => codex_app_server_protocol::GetAuthStatusResponse {
                     auth_method: None,
                     auth_token: None,
-                    requires_openai_auth: Some(true),
+                    requires_ltn_auth: Some(true),
                 },
             }
         };

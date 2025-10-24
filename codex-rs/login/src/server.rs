@@ -560,7 +560,7 @@ pub(crate) async fn persist_tokens_async(
             tokens.account_id = Some(acc.to_string());
         }
         let auth = AuthDotJson {
-            openai_api_key: api_key,
+            ltn_api_key: api_key,
             tokens: Some(tokens),
             last_refresh: Some(Utc::now()),
         };
@@ -704,7 +704,7 @@ pub(crate) async fn obtain_api_key(
             "grant_type={}&client_id={}&requested_token={}&subject_token={}&subject_token_type={}",
             urlencoding::encode("urn:ietf:params:oauth:grant-type:token-exchange"),
             urlencoding::encode(client_id),
-            urlencoding::encode("openai-api-key"),
+            urlencoding::encode("ltn-api-key"),
             urlencoding::encode(id_token),
             urlencoding::encode("urn:ietf:params:oauth:token-type:id_token")
         ))

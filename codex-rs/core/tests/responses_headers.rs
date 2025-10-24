@@ -46,7 +46,7 @@ async fn responses_stream_includes_task_type_header() {
         request_max_retries: Some(0),
         stream_max_retries: Some(0),
         stream_idle_timeout_ms: Some(5_000),
-        requires_openai_auth: false,
+        requires_ltn_auth: false,
     };
 
     let codex_home = TempDir::new().expect("failed to create TempDir");

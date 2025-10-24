@@ -86,7 +86,7 @@ fn assert_message_ends_with(request_body: &serde_json::Value, text: &str) {
 #[expect(clippy::unwrap_used)]
 fn write_auth_json(
     codex_home: &TempDir,
-    openai_api_key: Option<&str>,
+    ltn_api_key: Option<&str>,
     chatgpt_plan_type: &str,
     access_token: &str,
     account_id: Option<&str>,
@@ -118,7 +118,7 @@ fn write_auth_json(
     }
 
     let auth_json = json!({
-        "OPENAI_API_KEY": openai_api_key,
+        "LTN_API_KEY": ltn_api_key,
         "tokens": tokens,
         // RFC3339 datetime; value doesn't matter for these tests
         "last_refresh": chrono::Utc::now(),
@@ -230,7 +230,7 @@ async fn resume_includes_initial_messages_and_sends_prior_items() {
     // Configure Codex to resume from our file
     let model_provider = ModelProviderInfo {
         base_url: Some(format!("{}/v1", server.uri())),
-        ..built_in_model_providers()["openai"].clone()
+        ..built_in_model_providers()["ltn"].clone()
     };
     let codex_home = TempDir::new().unwrap();
     let mut config = load_default_config_for_test(&codex_home);
@@ -314,7 +314,7 @@ async fn includes_conversation_id_and_model_headers_in_request() {
 
     let model_provider = ModelProviderInfo {
         base_url: Some(format!("{}/v1", server.uri())),
-        ..built_in_model_providers()["openai"].clone()
+        ..built_in_model_providers()["ltn"].clone()
     };
 
     // Init session
@@ -372,7 +372,7 @@ async fn includes_base_instructions_override_in_request() {
 
     let model_provider = ModelProviderInfo {
         base_url: Some(format!("{}/v1", server.uri())),
-        ..built_in_model_providers()["openai"].clone()
+        ..built_in_model_providers()["ltn"].clone()
     };
     let codex_home = TempDir::new().unwrap();
     let mut config = load_default_config_for_test(&codex_home);
@@ -431,7 +431,7 @@ async fn chatgpt_auth_sends_correct_request() {
 
     let model_provider = ModelProviderInfo {
         base_url: Some(format!("{}/api/codex", server.uri())),
-        ..built_in_model_providers()["openai"].clone()
+        ..built_in_model_providers()["ltn"].clone()
     };
 
     // Init session
@@ -506,7 +506,7 @@ async fn prefers_apikey_when_config_prefers_apikey_even_with_chatgpt_tokens() {
 
     let model_provider = ModelProviderInfo {
         base_url: Some(format!("{}/v1", server.uri())),
-        ..built_in_model_providers()["openai"].clone()
+        ..built_in_model_providers()["ltn"].clone()
     };
 
     // Init session
@@ -561,7 +561,7 @@ async fn includes_user_instructions_message_in_request() {
 
     let model_provider = ModelProviderInfo {
         base_url: Some(format!("{}/v1", server.uri())),
-        ..built_in_model_providers()["openai"].clone()
+        ..built_in_model_providers()["ltn"].clone()
     };
 
     let codex_home = TempDir::new().unwrap();
@@ -640,7 +640,7 @@ async fn azure_responses_request_includes_store_and_reasoning_ids() {
         request_max_retries: Some(0),
         stream_max_retries: Some(0),
         stream_idle_timeout_ms: Some(5_000),
-        requires_openai_auth: false,
+        requires_ltn_auth: false,
     };
 
     let codex_home = TempDir::new().unwrap();
@@ -780,7 +780,7 @@ async fn token_count_includes_rate_limits_snapshot() {
         .mount(&server)
         .await;
 
-    let mut provider = built_in_model_providers()["openai"].clone();
+    let mut provider = built_in_model_providers()["ltn"].clone();
     provider.base_url = Some(format!("{}/v1", server.uri()));
 
     let home = TempDir::new().unwrap();
@@ -1131,7 +1131,7 @@ async fn azure_overrides_assign_properties_used_for_responses_url() {
         request_max_retries: None,
         stream_max_retries: None,
         stream_idle_timeout_ms: None,
-        requires_openai_auth: false,
+        requires_ltn_auth: false,
     };
 
     // Init session
@@ -1209,7 +1209,7 @@ async fn env_var_overrides_loaded_auth() {
         request_max_retries: None,
         stream_max_retries: None,
         stream_idle_timeout_ms: None,
-        requires_openai_auth: false,
+        requires_ltn_auth: false,
     };
 
     // Init session
@@ -1283,7 +1283,7 @@ async fn history_dedupes_streamed_and_final_messages_across_turns() {
     // Configure provider to point to mock server (Responses API) and use API key auth.
     let model_provider = ModelProviderInfo {
         base_url: Some(format!("{}/v1", server.uri())),
-        ..built_in_model_providers()["openai"].clone()
+        ..built_in_model_providers()["ltn"].clone()
     };
 
     // Init session with isolated codex home.

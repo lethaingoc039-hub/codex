@@ -358,7 +358,7 @@ async fn review_input_isolated_from_parent_history() {
     let mut config = load_default_config_for_test(&codex_home);
     config.model_provider = ModelProviderInfo {
         base_url: Some(format!("{}/v1", server.uri())),
-        ..built_in_model_providers()["openai"].clone()
+        ..built_in_model_providers()["ltn"].clone()
     };
 
     let session_file = codex_home.path().join("resume.jsonl");
@@ -636,7 +636,7 @@ where
 {
     let model_provider = ModelProviderInfo {
         base_url: Some(format!("{}/v1", server.uri())),
-        ..built_in_model_providers()["openai"].clone()
+        ..built_in_model_providers()["ltn"].clone()
     };
     let mut config = load_default_config_for_test(codex_home);
     config.model_provider = model_provider;
@@ -663,7 +663,7 @@ where
 {
     let model_provider = ModelProviderInfo {
         base_url: Some(format!("{}/v1", server.uri())),
-        ..built_in_model_providers()["openai"].clone()
+        ..built_in_model_providers()["ltn"].clone()
     };
     let mut config = load_default_config_for_test(codex_home);
     config.model_provider = model_provider;
